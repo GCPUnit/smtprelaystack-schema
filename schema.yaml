@@ -1,0 +1,869 @@
+title: CSD SMTP Delivery Service
+description: Smtp Delivery Service will setup the infrastructure needed to forward smtp traffic to the OCI EDS
+informationalText: Smtp Delivery Service will setup the infrastructure needed to forward smtp traffic to the OCI EDS
+schemaVersion: 0.1
+version: "0.1"
+
+# URL of Logo Icon used on Application Information tab. Logo must be 130x130 pixels.
+logoUrl: https://ibb.co/yFJm0wD
+
+locale: "en"
+variableGroups:
+  - title: "Auth"
+    variables:
+      - ${tenancy_ocid}
+      - ${user_ocid}
+      - ${fingerprint}
+      - ${private_key}
+    visible: false
+
+  - title: "Zone - Compartment"
+    visible: true
+    variables:
+      - ${region}
+      - ${compartment_id}
+
+  - title: "Network Configuration"
+    visible: true
+    variables:
+      - ${public_ip_lifetime}
+      - ${public_ip_display_name}
+      - ${vcn_cidr_block}
+      - ${vcn_display_name}
+      - ${vcn_dns_label}
+      - ${nat_gateway_display_name}
+      - ${nat_gateway_block_traffic}
+      - ${internet_gateway_display_name}
+      - ${internet_gateway_enabled}
+      - ${public_route_table_display_name}
+      - ${private_route_table_display_name}
+      - ${igw_route_cidr_block}
+      - ${natgw_route_cidr_block}
+      - ${public_sl_display_name}
+      - ${private_sl_display_name}
+      - ${egress_destination}
+      - ${tcp_protocol}
+      - ${public_ssh_sl_source}
+      - ${public_smtp_sl_source}
+      - ${rule_stateless}
+      - ${public_sl_ssh_tcp_port}
+      - ${private_sl_ssh_tcp_port}
+      - ${private_sl_smtp_tcp_port}
+      - ${public_sl_smtp_tcp_port}
+      - ${public_subnet_display_name}
+      - ${private_subnet_display_name}
+      - ${public_subnet_dns_label}
+      - ${public_subnet2_dns_label}
+      - ${private_subnet_dns_label}
+      - ${public_prohibit_public_ip_on_vnic}
+      - ${private_prohibit_public_ip_on_vnic}
+
+
+  - title: "Compute"
+    visible: true
+    variables:
+      - ${operating_system}
+      - ${operating_system_version}
+      - ${instance_shape}
+      - ${instance_shape_config_memgb}
+      - ${instance_shape_ocpus}
+      - ${source_type}
+      - ${assign_public_ip}
+      - ${instance_display_name}
+      - ${instance_create_vnic_details_hostname_label}
+      - ${is_monitoring_disabled}
+      - ${ssh_public_key}
+      - ${instance_pool_load_balancers_port}
+      - ${instance_pool_load_balancers_vnic_selection}
+      - ${instance_configuration_name}
+      - ${instance_configuration_type}
+      - ${instance_configuration_launch_details_name}
+      - ${instance_configuration_vnic_details_assign_public_ip}
+      - ${instance_configuration_vnic_details_name}
+      - ${instance_configuration_vcnic_skip_source_dest_check}
+      - ${instance_configuration_source_details_source_type}
+      - ${instance_pool_size}
+      - ${instance_pool_state}
+      - ${instance_pool_name}
+
+
+  - title: "Autoscaling"
+    visible: true
+    variables:
+      - ${autoscaling_cooldown_in_seconds}
+      - ${autoscaling_name}
+      - ${autoscaling_is_enabled}
+      - ${autoscaling_policies_initial}
+      - ${autoscaling_policies_max}
+      - ${autoscaling_policies_min}
+      - ${autoscaling_policy_name}
+      - ${autoscaling_type}
+      - ${autoscaling_rules_action_type_out}
+      - ${autoscaling_rules_action_value_out}
+      - ${autoscaling_rules_name_out}
+      - ${autoscaling_rules_metric_type_out}
+      - ${autoscaling_rules_metric_threshold_operator_out}
+      - ${autoscaling_rules_metric_threshold_value_out}
+      - ${autoscaling_rules_action_type_in}
+      - ${autoscaling_rules_action_value_in}
+      - ${autoscaling_rules_name_in}
+      - ${autoscaling_rules_metric_type_in}
+      - ${autoscaling_rules_metric_threshold_operator_in}
+      - ${autoscaling_rules_metric_threshold_value_in}
+      - ${autoscaling_resources_type}
+
+
+  - title: "Load Balancer"
+    visible: true
+    variables:
+      - ${lb_shape}
+      - ${lb_min_bandwidth_in_mbps}
+      - ${lb_max_bandwidth_in_mbps}
+      - ${lb_name}
+      - ${lb_is_private}
+      - ${lb_be_name}
+      - ${lb_be_policy}
+      - ${lb_be_health_checker_port}
+      - ${lb_be_health_checker_protocol}
+      - ${lb_be_health_checker_regex}
+      - ${lb_be_health_checker_urlpath}
+      - ${lb_be_session_cookie}
+      - ${lb_be_session_fallback}
+      - ${lb_listener_name}
+      - ${lb_listener_port}
+      - ${lb_listener_protocol}
+      - ${lb_listener_connection_configuration_idle_timeout}
+
+  
+  - title: "Notification and Rule"
+    visible: true
+    variables:
+      - ${notification_topic_name}
+      - ${notification_topic_description}
+      - ${rule_actions_actions_action_type}
+      - ${rule_actions_actions_is_enabled}
+      - ${rule_actions_actions_description}
+      - ${rule_condition}
+      - ${rule_display_name}
+      - ${rule_is_enabled}
+      - ${rule_description}
+
+
+  - title: "Certificate"
+    visible: true
+    variables:
+      - ${certificate_name}
+      - ${certificate_passphrase}
+      - ${certificate_ca}
+      - ${certificate_private_key}
+      - ${certificate_public}
+
+
+
+  - title: "SMTP"
+    visible: true
+    variables:
+      - ${smtp_port}
+      - ${smtp_host}
+      - ${oci_email_userid}
+      - ${oci_email_password}
+      - ${smtpuser}
+      - ${smtppasswd}
+      - ${smtpdomain}
+
+variables:
+  tenancy_ocid:
+    title: "Tenancy"
+    description: "Your tenancy's OCID"
+    type: string
+    required: true
+
+  user_ocid :
+    title: "User OCI"
+    description: "User OCI"
+    type: string
+    required: true
+    #sensitive: true
+  fingerprint:
+    title: "Fingerprint for the user key, can be found under user in console"
+    description: "Fingerprint for the user key, can be found under user in console"
+    type: string
+    required: true
+  private_key: 
+    title: "User key"
+    description: "User key"
+    type: string
+    required: true
+    #sensitive: true
+  region: 
+    title: "Oracle Region"
+    description: "Oracle Region"
+    type: string
+    required: true
+  operating_system:
+    title: "Operating System"
+    description: "Operating System"
+    type: string
+    default: "Oracle Linux"
+    required: false
+  operating_system_version: 
+    title: "Operating System Version"
+    description: "Operating System Version"
+    type: string
+    default: "7.9"
+    required: false
+  compartment_ocid:
+    title: "Compartment OCID where the solution will be deployed"
+    description: "Compartment OCID where the solution will be deployed"
+    type: string
+    default: "ocid1.compartment.oc1..aaaaaaaaxe43dddgbewqrq4xbtfa5jrkjg3bkgyzcxtua3juraies7c5hydq"
+    required: false
+  public_ip_lifetime:
+    title: "Reserved Ip lifetime" 
+    description: "Reserved Ip lifetime"
+    type: string
+    default: RESERVED
+    required: false
+  public_ip_display_name :
+    title: "Friendly Name for the reserved IP"
+    description: "Friendly Name for the reserved IP"
+    type: string
+    default: "Email_Service_Public_IP"
+    required: false
+  vcn_cidr_block:
+    title: "CIDR block for OCI VCN" 
+    description: "CIDR block for OCI VCN"
+    type: string
+    default: 172.16.0.0/16
+    required: false
+  vcn_display_name:
+    title: "Friendly name for VCN"
+    description: "Friendly name for VCN" 
+    type: string
+    default: "Email_Service_VCN"
+    required: false
+  vcn_dns_label:
+    title: "DNS Labnel for VCN"
+    description: "DNS Labnel for VCN" 
+    type: string
+    default: "emailservice"
+    required: false
+  nat_gateway_display_name:
+    title: "Display Name for NatGW"
+    description: "Display Name for NatGW"
+    type: string
+    default: "Email_Service_NatGateway"
+    required: false
+  nat_gateway_block_traffic:
+    title: "NatGw is active or not"
+    description: "NatGw is active or not"
+    type: boolean
+    default: false
+    required: false
+  internet_gateway_display_name:
+    title: "Display Name for InternetGW"
+    description: "Display Name for InternetGW"
+    type: string
+    default: "Email_Service_InternetGateway" 
+    required: false
+  internet_gateway_enabled:
+    title: "InternetGW is enable or not"
+    description: "InternetGW is enable or not" 
+    type: boolean
+    default: true
+    required: false
+
+  public_route_table_display_name:
+    title: "Friendly name for the public route table"
+    description: "Friendly name for the public route table"
+    type: string
+    default: "Email_Service_PublicRoute"
+    required: false
+  private_route_table_display_name: 
+    title: "Friendly name for the private route table"
+    description: "Friendly name for the private route table"
+    type: string
+    default: "Email_Service_PrivateRoute"
+    required: false
+  igw_route_cidr_block:
+    title: "CIDR assigned to the IGW" 
+    description: "CIDR assigned to the IGW" 
+    type: string
+    default: "0.0.0.0/0"
+    required: false
+  natgw_route_cidr_block:
+    title: "CIDR assigned to the NATGW" 
+    description: "CIDR assigned to the NATGW" 
+    type: string
+    default: "0.0.0.0/0"
+    required: false
+#SECURITYLIST (SL)
+  public_sl_display_name:
+    title: "display Name for public SL"
+    description: "display Name for public SL"
+    type: string
+    default: "Email_Service_PublicSL"
+    required: false
+  private_sl_display_name:
+    title: "display Name for private SL"
+    description: "display Name for private SL"
+    type: string
+    default: "Email_Service_PrivateSL"
+    required: false
+  egress_destination:
+    title: "CIDR allowed for egress flow"
+    description: "CIDR allowed for egress flow"
+    default: "0.0.0.0/0"
+    required: false
+  tcp_protocol:
+    title: "Protocol managed by SL" 
+    description: "Protocol managed by SL" 
+    type: integer
+    default: 6
+    required: false
+  public_ssh_sl_source:
+    title: "Cidr allowed to ssh" 
+    description: "Cidr allowed to ssh" 
+    type: string
+    default: "0.0.0.0/0"
+    required: false
+  public_smtp_sl_source:
+    title: "Cidr allowed to smtp" 
+    description: "Cidr allowed to smtp" 
+    type: string
+    default: "0.0.0.0/0"
+    required: false
+  rule_stateless:
+    title: "is rule stateless or not" 
+    description: "is rule stateless or not"
+    type: boolean
+    default: false
+    required: false
+  public_sl_ssh_tcp_port:
+    title: "public ssh port"
+    description: "public ssh port"
+    type: integer
+    default: 22
+    required: false
+  private_sl_ssh_tcp_port:
+    title: "private ssh port"
+    description: "private ssh port"
+    type: integer
+    default: 22
+    required: false
+  private_sl_smtp_tcp_port:
+    title: "private smtp port"
+    description: "private smtp port"
+    type: integer
+    default: 25
+    required: false
+  public_sl_smtp_tcp_port:
+    title: "public smtp port"
+    description: "public smtp port"
+    type: integer
+    default: 25
+    required: false
+#Subnet
+  public_subnet_display_name:
+    title: "Friendly name for public subnet"
+    description: "Friendly name for public subnet"
+    type: string
+    default: "Email_Service_PublicSubnet"
+    required: false
+  private_subnet_display_name:
+    title: "Friendly name for private subnet"
+    description: "Friendly name for private subnet"
+    type: string
+    default: "Email_Service_PrivateSubnet"
+    required: false
+  public_subnet_dns_label:
+    title: "dns label for public subnet" 
+    description: "dns label for public subnet"
+    type: string
+    default: "pub"
+    required: false
+  public_subnet2_dns_label:
+    title: "dns label for public subnet2" 
+    description: "dns label for public subnet2"
+    type: string 
+    default: "pub2"
+    required: false
+  private_subnet_dns_label:
+    title: "dns label for private subnet" 
+    description: "dns label for private subnet"
+    type: string 
+    default: "pri"
+    required: false
+  public_prohibit_public_ip_on_vnic:
+    title: "Prohibit public IP on public vnic"
+    description: "Prohibit public IP on public vnic"
+    type: boolean
+    default: false
+    required: false
+  private_prohibit_public_ip_on_vnic:
+    title: "Prohibit public IP on private vnic"
+    description: "Prohibit public IP on private vnic"
+    type: boolean
+    default: true
+    required: false
+
+#instance
+
+  instance_shape:
+    title: "The shape of the instances" 
+    description: "The shape of instances"
+    type: enum
+    default: "VM.Standard.E3.Flex"
+    enum:
+      - VM.Standard.E3.Flex
+      - VM.Standard.E4.Flex
+    required: false
+
+  instance_shape_config_memgb:
+    title: "GB of mem assigned to the instances" 
+    description: "GB of mem assigned to the instances"
+    type: integer
+    default: 4
+    required: false
+  instance_shape_ocpus:
+    title: "OCPU assigned to the instances" 
+    description: "OCPU assigned to the instances"
+    type: integer
+    default: 2
+    required: false
+  
+  source_type:
+    title: "Image source type" 
+    description: "Image source type" 
+    typer: string
+    default: "image"
+    required: false
+  assign_public_ip:
+    title: "Assign a public Ip to the bastion host?"
+    description:  "Assign a public Ip to the bastion host?"
+    type: boolean
+    default: true
+    required: false
+
+  instance_display_name:
+    title: "Bastion Instance display name" 
+    description: "Bastion Instance display name"
+    type: string
+    default: "Email_Service_Bastion"
+    required: false
+  instance_create_vnic_details_hostname_label:
+    title: "vnic hostname label"
+    description: "vnic hostname label"
+    type: string
+    default: "EmailServicepublic"
+    required: false
+  is_monitoring_disabled:
+    title: "You want instance monitor to be disabled" 
+    description: "You want instance monitor to be disabled"
+    type: boolean
+    default: false
+    required: false
+  ssh_public_key:
+    title: "Authorized ssh keys on bastion host" 
+    description: "Authorized ssh keys on bastion host"
+    type: string
+    default: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDKk+JJegGjgcVLTPysUyEG9Nn200hPfTG1Lga9KwaXh6iZmb5meHZKw0I7W3thIJYgiPtYkWevUSI1/ayG6jwE/Ddj3xGKymz4UX94+8L4Jv2mBWKrWY84lE4ViQjDB4eU3EKk0iBCKiKxrsi825BmUfxKgIMSFUkeh0EbcvkcqisC6IJpOGoC0ivBWy9IcfMmkVZGbGaZYuhSqDqL4yWiXn63/pIinLsy/24itOIc/bqxu0eMbhR27/gU6hLz79w4HtBc2lOnWLiDrD2ZHKn4diW7V4DRDmYra1iStWBaSWABHVM37DGfSqL9tbULcOkT67HArXAGH/Sr3+uudvWwmqLVVYocemZlJDgqU9egSDmSPs4qcm55oXgwsTdRTZHPs+5yI0iDxGtFsUHjcJOTb/3ukpEQozivElNgndbN8eQYuRi/FWWBE6MGC0jvz10DlBshxV0mQviMtmhPH80MVzMjKpIM68Aow42p8oZoECsxyLcTQh5ckn3lEqDIoNM= alessandro.leonardi@avaloq.com"
+    required: true
+    #sensitive: true
+
+# Instance Pool
+  instance_pool_load_balancers_port:
+    title: "Port exposed by the instance pool"
+    description: "Port exposed by the instance pool"
+    type: integer
+    default: 25
+    required: false
+ 
+  instance_pool_load_balancers_vnic_selection:
+    title: "Vnic used by lb"
+    description: "Vnic used by lb"
+    type: string
+    default: "primaryvnic"
+    required: false
+
+  smtp_port:
+    title: "Port used by OCI EDS"
+    description: "Port used by OCI EDS"
+    type: integer
+    default: 587
+    required: true
+  smtp_host:
+    title: "Oracle EDS smtp (regional)"
+    description: "Oracle EDS smtp (regional)"
+    type: string
+    default: "smtp.email.eu-zurich-1.oci.oraclecloud.com"
+    required: true
+  oci_email_userid:
+    title: "OCI userid for smtp service" 
+    description: "OCI userid for smtp service"
+    type: string
+    required: true
+    default: "OCI EDS Credentials here"
+  oci_email_password:
+    title: "OCI passwd for smtp service" 
+    description: "OCI passwd for smtp service"
+    type: string
+    required: true
+    default: "OCI EDS Credentials here"
+
+#LOAD BALANCER
+
+  lb_shape:
+    title: "Shape for Load Balancer"
+    description: "Shape for Load Balancer" 
+    type: string
+    default: "flexible"
+    required: false
+  lb_min_bandwidth_in_mbps:
+    title: "Load Balancer min bandwidth in mbps" 
+    type: integer
+    default: 10
+    required: false
+
+  lb_max_bandwidth_in_mbps:
+    title: "Load Balancer max bandwidth in mbps" 
+    type: integer
+    default: 100
+    required: false
+
+  lb_name:
+    title: "Friendly name for Load Balancer"
+    type: string
+    default: "Email_Service_LB"
+    required: false
+  lb_is_private:
+    title: "Is the Load balancer private"
+    type: boolean 
+    default: false
+    required: false
+  lb_be_name:
+    title: "Load balancer Backend Name" 
+    type: string
+    default: "Email_Service_BBE1"
+    required: false
+  lb_be_policy:
+    title: "load balancing policy"
+    type: enum
+    enum:
+      -  ROUND_ROBIN
+    default: ROUND_ROBIN
+    required: false
+  lb_be_health_checker_port:
+    title: "Port to be checked by healt check" 
+    type: integer
+    default: 25
+    required: false
+  lb_be_health_checker_protocol:
+    title: "Health Check Protocol" 
+    type: string
+    default: "TCP"
+    required: false
+
+  lb_be_health_checker_regex:
+    title: "Load Balancer health check regular expression" 
+    type: string
+    default: ".*"
+    required: false
+  lb_be_health_checker_urlpath:
+    title: "If needed url to be checked by lb healthcheck"
+    type: string
+    default: "/index.html"
+    required: false
+  lb_be_session_cookie:
+    title: "Load balancer session cookie"
+    type: string
+    default: "lb-session1"
+    required: false
+  lb_be_session_fallback:
+    title: "You can configure the backend set to disable this fallback behavior"
+    type: boolean
+    default: true
+    required: false
+  lb_listener_name:
+    title: "Display Name for lb listener"
+    type: string
+    default: "Email_Service_Listener"
+    required: false
+  lb_listener_port:
+    title: "LB listener port"
+    type: integer
+    default: 25
+    required: false
+  lb_listener_protocol:
+    title: "LB Listener Protocol"
+    type: string
+    default: "TCP"
+    required: false
+  lb_listener_connection_configuration_idle_timeout:
+    title: "Load Balancer idle timeout in seconds "
+    type: integer
+    default: 300
+    required: false
+
+
+#INSTANCE CONFIGURATION
+
+  instance_configuration_name:
+    title: "Display Name for the instance configuration"
+    type: string
+    default: "Email_Service_Instance_Configuration"
+    required: false
+  instance_configuration_type:
+    title: "Instance configuration type"
+    type: string
+    default: "compute"
+    required: false
+  instance_configuration_launch_details_name:
+    title: "Display Name for the instance pool lunch"
+    type: string
+    default: "Email_Service_Lunch_Details"
+    required: false
+  instance_configuration_vnic_details_assign_public_ip:
+    title: "Would you like to attach public ip on instance pool?"
+    type: boolean
+    default: false
+    required: false
+  instance_configuration_vnic_details_name:
+    title: "Instance pool vnic display name"
+    type: string
+    default: "Email_Service_Instance"
+    required: false
+  instance_configuration_vcnic_skip_source_dest_check:
+    title: "Would you like to skip source and destination check"
+    type: boolean
+    default: false
+    required: false
+  instance_configuration_source_details_source_type:
+    title: "Instance pool source type"
+    type: string
+    default: "Image"
+    required: false
+
+  instance_pool_size:
+    title: "How many servers would you like to have at deployment time (managed by autoscaling group)"
+    type: integer
+    default: 2
+    required: false
+  instance_pool_state:
+    title: "Desired instance pool state"
+    type: string 
+    default: "RUNNING"
+    required: false
+  instance_pool_name:
+    title: "Instance pool display name"
+    type: string
+    default: "Email_Service_Instance_Pool"
+    required: false
+#Autoscaling
+  autoscaling_cooldown_in_seconds:
+    title: "Autoscaling cooldown in seconds"
+    type: integer
+    default: 300
+    required: false
+  autoscaling_name:
+    title: "Autoscaling Display Name"
+    type: string
+    default: "Email_Service_ScalingConfiguration"
+    required: false
+  autoscaling_is_enabled:
+    title: "Is autoscaling enabled?" 
+    type: boolean
+    default: true
+    required: false
+  autoscaling_policies_initial:
+    title: "How many instances would you like to start with"
+    type: integer 
+    default: 2
+    required: false
+  autoscaling_policies_max:
+    title: "Max number of instances managed by autoscaling" 
+    type: integer
+    default: 4
+    required: false
+  autoscaling_policies_min:
+    title: "Minimum number of instances running in the instance pool"
+    type: integer
+    default: 2
+    required: false
+
+  autoscaling_policy_name:
+    title: "Display Name for autoscaling policy"
+    type: string 
+    default: "Email_Service_ScalingPolicy"
+    required: false
+  autoscaling_type:
+    title: "which type of autoscaling"
+    type: string
+    default: "threshold"
+    required: false
+  autoscaling_rules_action_type_out:
+    title: "autoscalin ruleout "
+    type: string
+    default: CHANGE_COUNT_BY
+    required: false
+  autoscaling_rules_action_value_out:
+    title: "autoscaling rule action out"
+    type: integer
+    default: 1
+    required: false
+
+  autoscaling_rules_name_out:
+    title: "Autoscaling rule name out"
+    type: string
+    default: "Email_Service_ScaleOutRule"
+    required: false
+  autoscaling_rules_metric_type_out:
+    title: "Autoscaling metric type out"
+    type: string
+    default: "CPU_UTILIZATION"
+    required: false
+  autoscaling_rules_metric_threshold_operator_out:
+    title: "autoscaling rules threshold operator out"
+    type: string
+    default: "GT"
+    required: false
+
+  autoscaling_rules_metric_threshold_value_out:
+    title: "Autoscaling rule metric out" 
+    type: integer
+    default: 10
+    required: false
+
+  autoscaling_rules_action_type_in:
+    title: "autoscalin rule in "
+    type: string
+    default: CHANGE_COUNT_BY
+    required: false
+  autoscaling_rules_action_value_in:
+    title: "autoscaling rule action in"
+    type: integer
+    default: 1
+    required: false
+  autoscaling_rules_name_in:
+    title: "Autoscaling rule name in"
+    type: string
+    default: "Email_Service_ScaleInRule"
+    required: false
+  autoscaling_rules_metric_type_in:
+    title: "Autoscaling metric type in"
+    type: string
+    default: "CPU_UTILIZATION"
+    required: false
+  autoscaling_rules_metric_threshold_operator_in:
+    title: "autoscaling rules threshold operator in"
+    type: string
+    default: "GT"
+    required: false
+  autoscaling_rules_metric_threshold_value_in:
+    title: "Autoscaling rule metric in" 
+    type: integer
+    default: 10
+    required: false
+ 
+  autoscaling_resources_type:
+    title: "Autoscaling resource type"
+    type: string
+    default: "instancePool"
+    required: false
+#Notification
+  notification_topic_name:
+    title: "Display name for the notification topic"
+    type: string
+    default: "Email_Service_ScalingNotification"
+    required: false
+  notification_topic_description:
+    title: "Notification topic description"
+    type: string
+    default: "Notification for AutoScaling"
+    required: false
+#Event
+
+  rule_actions_actions_action_type:
+    title: "Rule actions type"
+    type: string
+    default: "ONS"
+    required: false
+  rule_actions_actions_is_enabled:
+    title: "Are rule actions enabled"
+    type: boolean
+    default: true
+    required: false
+  rule_actions_actions_description:
+    title: "Rules action description"
+    type: string
+    default: "Rule to send notification"
+    required: false
+  rule_condition:
+    title: "Rule condition"
+    type: string
+    default: '\eventType\: [\com.oraclecloud.computeapi.terminateinstance.begin\, \com.oraclecloud.autoscaling.scalingaction\, \com.oraclecloud.computeapi.launchinstance.begin\]'
+    required: false
+  rule_display_name:
+    title: "Display Name for rule" 
+    type: string
+    default: "Email_Service_ScalingRule"
+    required: false
+  rule_is_enabled:
+    title: "Is rule enabled"
+    type: boolean
+    default: true
+    required: false
+  rule_description:
+    title: "Rule Description"
+    type: string
+    default: "Rule to send notification"
+    required: false
+#Cert
+  certificate_name:
+    title: "Display Name for certificate" 
+    type: string
+    default: "email_service_cert"
+    required: false
+  certificate_passphrase:
+    title: "Passphrase if used by the certificate"
+    default: testpassphrase
+    type: string
+    #sensitive: true
+    required: false
+  certificate_ca:
+    title: "CA and intermediate for the certificate" 
+    type: string
+    default: "-----BEGIN CERTIFICATE-----\nMIIECzCCAvOgAwIBAgIURa/bxoiLYktPnwQWl5UGshtoJZQwDQYJKoZIhvcNAQEL\nBQAwgZQxCzAJBgNVBAYTAkNIMRQwEgYDVQQIDAtTd2l0emVybGFuZDEPMA0GA1UE\nBwwGWnVyaWNoMQwwCgYDVQQKDANDU0QxCzAJBgNVBAsMAkNBMRswGQYDVQQDDBJz\nZXJ2aWNlLmF2YWxvcS5jb20xJjAkBgkqhkiG9w0BCQEWF2luZm9Ac2VydmljZS5h\ndmFsb3EuY29tMB4XDTIzMDgyNDExNTYwMFoXDTI4MDgyMjExNTYwMFowgZQxCzAJ\nBgNVBAYTAkNIMRQwEgYDVQQIDAtTd2l0emVybGFuZDEPMA0GA1UEBwwGWnVyaWNo\nMQwwCgYDVQQKDANDU0QxCzAJBgNVBAsMAkNBMRswGQYDVQQDDBJzZXJ2aWNlLmF2\nYWxvcS5jb20xJjAkBgkqhkiG9w0BCQEWF2luZm9Ac2VydmljZS5hdmFsb3EuY29t\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwu/M+US0PAb+3Gljn4Cd\n+U0p/LSfkmb7ILAWZsO1Y/t9/j63TJOjAFzmfCgZ3NiC3HPKnBv9DO39Xij0kao3\nNB4TW5vTjWH8JmY+4z0vgovvi9d2ZDe6qj6FDnO+G5EsCY7uuj1MX0LbN+SUdLxG\n4BbV+wuotVWl4NOtc0XSQDBdyJbVFGx9ktQEw2BbvwW3a+YOoPxqXyUWe+Bxp2S+\njJm2/33mmsvCP3nk00yt1j0c8B1L0+SlgwhjA34qqO2gryWJQNdKGbjrcbgVqryM\nmZKuKxY46qnfyuEnOyy0egbNIJo8K2Xnu14t4yO3/ijdIJ66KgQnG5Rw6keHIbHr\nJwIDAQABo1MwUTAdBgNVHQ4EFgQU1w4bv1oDo1D2veM7nxh48k9GsaUwHwYDVR0j\nBBgwFoAU1w4bv1oDo1D2veM7nxh48k9GsaUwDwYDVR0TAQH/BAUwAwEB/zANBgkq\nhkiG9w0BAQsFAAOCAQEAJ8r6vx51x31iUik4QEclCXGvlBqUHkWnKQMoATCJIH24\nbqu+vuh+OmJIWMVfWcwy/LaXwUOhtRLmUUVcR18smNfksf1iEc+T8pHLH0oO8l4U\npCcgjL6pzhpjayYskSYM2jYlKiMNwi3iqw9j11a3ub4eyJDfVPI5iV4sy16pSIX8\nBS8f1wJaTyI4Kke/08vyGbveXNOaOjRy5uG1vjpVfza1/1xr3FsceoFRpiO876Zq\n8qUS0PIL3E6Yij5mvrueYQYduyU4qMdeLdeDP6TRMYjfmULTCAFdO4zXmd15SOtm\nzrnDLaPuQKZ2+IsxLXwAfnEMTWyF15gxmYdyPeKiCQ==\n-----END CERTIFICATE-----\n"
+    required: false
+  certificate_private_key:
+    title: "Private key for the certificate" 
+    type: string
+    #sensitive: true
+    default: "-----BEGIN RSA PRIVATE KEY-----\n*********\n"
+    required: false
+  certificate_public:
+    title: "Public Certificate"
+    type: string
+    default: "-----BEGIN CERTIFICATE-----\nMIID2TCCAsECFCmbUAPNq3g6YjluSaZsgV3SkT8uMA0GCSqGSIb3DQEBCwUAMIGo\nMQswCQYDVQQGEwJDSDEUMBIGA1UECAwLU3dpdHplcmxhbmQxDzANBgNVBAcMBlp1\ncmljaDEMMAoGA1UECgwDQ1NEMREwDwYDVQQLDAhTZXJ2aWNlczEpMCcGA1UEAwwg\nZW1haWwtc2VydmljZS5zZXJ2aWNlLmF2YWxvcS5jb20xJjAkBgkqhkiG9w0BCQEW\nF2luZm9Ac2VydmljZS5hdmFsb3EuY29tMB4XDTIzMDgyNDEzNTEwNVoXDTI0MDgy\nMzEzNTEwNVowgagxCzAJBgNVBAYTAkNIMRQwEgYDVQQIDAtTd2l0emVybGFuZDEP\nMA0GA1UEBwwGWnVyaWNoMQwwCgYDVQQKDANDU0QxETAPBgNVBAsMCFNlcnZpY2Vz\nMSkwJwYDVQQDDCBlbWFpbC1zZXJ2aWNlLnNlcnZpY2UuYXZhbG9xLmNvbTEmMCQG\nCSqGSIb3DQEJARYXaW5mb0BzZXJ2aWNlLmF2YWxvcS5jb20wggEiMA0GCSqGSIb3\nDQEBAQUAA4IBDwAwggEKAoIBAQDg6Zjy3FOwPHjxDfFo1ZGL2iwZNra1IGc7OQ9t\n2TWYxevSB9t6P1df6AHxiUnZxmPSUkppBQiBsSUy0+MDfgEjArlHgygQHVv5W1fe\n383Q/yujY+mA+U4JUSKTSwG0XHZBRwndJrlz5SXyHde2khiTg5B5ySWgHYFSe6Lp\nwCBdmmBrhs1U0i8yOBPARaTnM+n1K6hOIpbHKEfEGygkR1J184xYzYicqVofnN+x\nUK56H6KcYc9fNAaQMP6tjmMT1z/oLmEOzy0K2bjowXfcZCRxnoznkj6fxn4JXc8I\n5R+JZI3i9kN054Fbw+2/bArI4cBp4pKculHyZgDzPht9+8g7AgMBAAEwDQYJKoZI\nhvcNAQELBQADggEBAKG4fr4aARtn4dfpBJsXEpC6+uE826hbRyrwAIoKcIt25pYA\nvj5abj428crb8L5k/TwUTydew7rvd5cEek6TpOPlbOIxGpMUHVxigEbD/M2sl/V1\ndRZDikDEMjk4uGZMsncA3s52/wktjLtuuxEwQure5tI89eoA4lvxF86NFVfQBPQO\nbvOWBjFh1kp3Th+78crrnXrxGWifBpnau1jS21vMdKp0iTyyqLQYaQUfujC2wBxl\nbTBVgWjwophktibuHnSoxNOv7SOMez+m8L5bknMqsxPxv/nSaBS6oO6MXewrw3ji\nz7mPFfOC2S0sSRrqXEUCPT5pB7DHXkdNGBkP2fs=\n-----END CERTIFICATE-----\n"
+    required: false
+  smtppasswd:
+    title: "Smtp password to be created in postfix" 
+    type: string
+    default: "testpass3"
+    #sensitive: true
+    required: false
+  smtpuser:
+    title: "Smtp username to be created in postfix" 
+    type: string
+    #sensitive: true
+    default: "testuser3"
+    required: false
+  smtpdomain:
+    title: "smtp domain"
+    type: string
+    default: "bil.ch"
+    required: false
+
+
+
+
