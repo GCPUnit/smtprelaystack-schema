@@ -1,7 +1,7 @@
 title: CSD SMTP Delivery Service
 description: Smtp Delivery Service will setup the infrastructure needed to forward smtp traffic to the OCI EDS
 informationalText: Smtp Delivery Service will setup the infrastructure needed to forward smtp traffic to the OCI EDS
-schemaVersion: 0.1
+schemaVersion: 1.1.0
 version: "0.1"
 
 # URL of Logo Icon used on Application Information tab. Logo must be 130x130 pixels.
