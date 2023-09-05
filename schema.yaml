@@ -21,7 +21,7 @@ variableGroups:
     visible: true
     variables:
       - ${region}
-      - ${compartment_id}
+      #- ${compartment_id}
 
   - title: "Network Configuration"
     visible: true
