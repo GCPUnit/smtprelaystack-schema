@@ -212,12 +212,12 @@ variables:
     type: string
     default: "7.9"
     required: false
-  compartment_ocid:
-    title: "Compartment OCID where the solution will be deployed"
-    description: "Compartment OCID where the solution will be deployed"
-    type: string
-    default: "ocid1.compartment.oc1..aaaaaaaaxe43dddgbewqrq4xbtfa5jrkjg3bkgyzcxtua3juraies7c5hydq"
-    required: false
+#  compartment_ocid:
+#    title: "Compartment OCID where the solution will be deployed"
+#    description: "Compartment OCID where the solution will be deployed"
+#    type: string
+#    default: "ocid1.compartment.oc1..aaaaaaaaxe43dddgbewqrq4xbtfa5jrkjg3bkgyzcxtua3juraies7c5hydq"
+#    required: false
   public_ip_lifetime:
     title: "Reserved Ip lifetime" 
     description: "Reserved Ip lifetime"
