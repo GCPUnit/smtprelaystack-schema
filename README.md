@@ -6,3 +6,6 @@ Postfix Demo 3
 ]
 (https://cloud.oracle.com/resourcemanager/stacks/create
 ?zipUrl=[<package-url>](https://github.com/GCPUnit/smtprelaystack-schema/releases/tag/v0.0.1)https://github.com/GCPUnit/smtprelaystack-schema/releases/tag/v0.0.1)
+
+
+https://github.com/GCPUnit/smtprelaystack-schema/archive/refs/tags/v0.0.1.zip
