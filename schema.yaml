@@ -198,7 +198,8 @@ variables:
   region: 
     title: "Oracle Region"
     description: "Oracle Region"
-    type: string
+    #type: string
+    type: oci:identity:region:name
     required: true
   operating_system:
     title: "Operating System"
