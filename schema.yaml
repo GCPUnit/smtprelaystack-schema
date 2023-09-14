@@ -198,8 +198,9 @@ variables:
   region: 
     title: "Oracle Region"
     description: "Oracle Region"
-    type: string
-    required: true
+    type: oci:identity:region:name
+    #type: string
+    #required: true
   operating_system:
     title: "Operating System"
     description: "Operating System"
@@ -412,13 +413,13 @@ variables:
   instance_shape:
     title: "The shape of the instances" 
     description: "The shape of instances"
-    #type: enum
-    type: oci:core:instanceshape:name
-    #default: "VM.Standard.E3.Flex"
-    #enum:
-    #  - VM.Standard.E3.Flex
-    #  - VM.Standard.E4.Flex
-    #required: false
+    type: enum
+    #type: oci:core:instanceshape:name
+    default: "VM.Standard.E3.Flex"
+    enum:
+      - VM.Standard.E3.Flex
+      - VM.Standard.E4.Flex
+    required: false
 
   instance_shape_config_memgb:
     title: "GB of mem assigned to the instances" 
